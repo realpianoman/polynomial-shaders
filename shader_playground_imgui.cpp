@@ -1,3 +1,6 @@
+// I forgot to note, this whole thing is completely vibecoded, I dont have
+// enegry to deal with dear imgui and opengl
+
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
@@ -25,6 +28,8 @@ typedef struct {
     float confA;
     float confB;
 } ShaderParams;
+
+bool show_ui = true;
 
 /*
  * Fullscreen triangle vertex shader.
@@ -563,6 +568,17 @@ int main(int argc, char **argv) {
 
         glfwPollEvents();
 
+        static bool right_shift_was_down = false;
+
+        bool right_shift_down =
+            glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS;
+
+        if (right_shift_down && !right_shift_was_down) {
+            show_ui = !show_ui;
+        }
+
+        right_shift_was_down = right_shift_down;
+
         /* ----------------------------------------------------
          * ESC closes the window.
          * ---------------------------------------------------- */
@@ -747,34 +763,38 @@ int main(int argc, char **argv) {
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        int window_pixel_width;
-        int window_pixel_height;
-        glfwGetWindowSize(window, &window_pixel_width, &window_pixel_height);
+        if (show_ui) {
+            int window_pixel_width;
+            int window_pixel_height;
+            glfwGetWindowSize(window, &window_pixel_width,
+                              &window_pixel_height);
 
-        ImGui::SetNextWindowPos(
-            ImVec2((float)window_pixel_width - UI_WIDTH, 0.0f),
-            ImGuiCond_Always);
-        ImGui::SetNextWindowSize(ImVec2(UI_WIDTH, (float)window_pixel_height),
-                                 ImGuiCond_Always);
+            ImGui::SetNextWindowPos(
+                ImVec2((float)window_pixel_width - UI_WIDTH, 0.0f),
+                ImGuiCond_Always);
+            ImGui::SetNextWindowSize(
+                ImVec2(UI_WIDTH, (float)window_pixel_height), ImGuiCond_Always);
 
-        ImGuiWindowFlags panel_flags = ImGuiWindowFlags_NoMove |
-                                       ImGuiWindowFlags_NoResize |
-                                       ImGuiWindowFlags_NoCollapse;
+            ImGuiWindowFlags panel_flags = ImGuiWindowFlags_NoMove |
+                                           ImGuiWindowFlags_NoResize |
+                                           ImGuiWindowFlags_NoCollapse;
 
-        ImGui::Begin("Shader Controls", NULL, panel_flags);
+            ImGui::Begin("Shader Controls", NULL, panel_flags);
 
-        ImGui::Text("Shader parameters");
-        ImGui::Separator();
+            ImGui::Text("Shader parameters");
+            ImGui::Separator();
 
-        ImGui::SliderFloat("confA", &params.confA, 0.0f, 1.0f);
-        ImGui::SliderFloat("confB", &params.confB, 0.0f, 1.0f);
+            ImGui::SliderFloat("confA", &params.confA, 0.0f, 1.0f);
+            ImGui::SliderFloat("confB", &params.confB, 0.0f, 1.0f);
 
-        ImGui::Separator();
-        ImGui::Text("confA = %.3f", params.confA);
-        ImGui::Text("confB = %.3f", params.confB);
+            /*
+            ImGui::Separator();
+            ImGui::Text("confA = %.3f", params.confA);
+            ImGui::Text("confB = %.3f", params.confB);
+            */
 
-        ImGui::End();
-
+            ImGui::End();
+        }
         /* ImGui needs the full framebuffer viewport, not the shader viewport.
          */
         glViewport(0, 0, framebuffer_width, framebuffer_height);
