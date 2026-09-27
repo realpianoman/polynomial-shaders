@@ -6,6 +6,9 @@ out vec4 FragColor;
 uniform vec2 iResolution;
 uniform float iTime;
 
+uniform float confA;
+uniform float confB;
+
 float dist(vec2 p1, vec2 p2) {
     return sqrt(pow(p1.x - p2.x, 2.0) + pow(p1.y - p2.y, 2.0));
 }
@@ -36,7 +39,7 @@ vec2 f(vec2 p) {
     // return cPow(p, 3.0) - vec2(sin(iTime * PI), 0.0);
     // return cPow(p, 3.0) - cPow(p, 2.0) - 5.0 * cPow(p, 1.0) - vec2(3.0, 0.0);
     // return cPow(p, 2.0) + cPow(p, 1.0) - vec2(3.0, 1.0);
-    return cPow(p, 2.0) + vec2(0.0, 0.0);
+    return cPow(p, 2.0) + vec2(confA, 0.0);
 }
 
 void main()
