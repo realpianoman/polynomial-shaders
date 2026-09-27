@@ -23,7 +23,7 @@
  * ------------------------------------------------------------ */
 
 #define UI_WIDTH 300.0f
-#define COEFFICIENTS_LENGTH 5
+#define COEFFICIENTS_LENGTH 11
 
 typedef struct {
     float coefficients[COEFFICIENTS_LENGTH];

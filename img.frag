@@ -1,6 +1,6 @@
 #version 330 core
 #define PI 3.14159265
-#define coefficientsLength 5
+#define coefficientsLength 11
 
 out vec4 FragColor;
 
@@ -90,8 +90,13 @@ void main()
         color = vec3(1.0);
     }
 
-    if(!solution && abs(f(vec2(pos.x, 0.0)).x - pos.y) <= 0.01) {
-        color = vec3(1.0);
+    if (!solution) {
+        float graphY = f(vec2(pos.x, 0.0)).x;
+        float thickness = max(0.01, 0.5 * fwidth(graphY));
+
+        if (abs(graphY - pos.y) <= thickness) {
+            color = vec3(1.0);
+        }
     }
 
     FragColor = vec4(color, 1.0);
