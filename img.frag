@@ -1,13 +1,13 @@
 #version 330 core
 #define PI 3.14159265
+#define coefficientsLength 5
 
 out vec4 FragColor;
 
 uniform vec2 iResolution;
 uniform float iTime;
 
-uniform float confA;
-uniform float confB;
+uniform float coefficients[coefficientsLength];
 
 float dist(vec2 p1, vec2 p2) {
     return sqrt(pow(p1.x - p2.x, 2.0) + pow(p1.y - p2.y, 2.0));
@@ -39,7 +39,14 @@ vec2 f(vec2 p) {
     // return cPow(p, 3.0) - vec2(sin(iTime * PI), 0.0);
     // return cPow(p, 3.0) - cPow(p, 2.0) - 5.0 * cPow(p, 1.0) - vec2(3.0, 0.0);
     // return cPow(p, 2.0) + cPow(p, 1.0) - vec2(3.0, 1.0);
-    return cPow(p, 2.0) + vec2(confA, 0.0);
+    // return cPow(p, 2.0) + vec2(confA, 0.0);
+
+    vec2 sum = vec2(0.0);
+    for(int i=0; i < coefficientsLength; i++) {
+        sum += coefficients[i] * cPow(p, float(coefficientsLength - 1 - i));
+    }
+
+    return sum;
 }
 
 void main()
@@ -66,7 +73,7 @@ void main()
     vec2 val = f(pos);
     vec3 color;
     if(solution) {
-        color = cColor(val) * brightness(val);
+        color = cColor(val); // * brightness(val);
     } else {
         color = vec3(0.0);
     }

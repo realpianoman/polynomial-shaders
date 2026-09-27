@@ -23,10 +23,10 @@
  * ------------------------------------------------------------ */
 
 #define UI_WIDTH 300.0f
+#define COEFFICIENTS_LENGTH 5
 
 typedef struct {
-    float confA;
-    float confB;
+    float coefficients[COEFFICIENTS_LENGTH];
 } ShaderParams;
 
 bool show_ui = true;
@@ -483,7 +483,7 @@ int main(int argc, char **argv) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    ShaderParams params = {0.5f, 0.5f};
+    ShaderParams params = {{0.0f, 0.0f, 0.0f, 0.0f, 1.0f}};
 
     /* --------------------------------------------------------
      * VSync
@@ -705,15 +705,11 @@ int main(int argc, char **argv) {
              * User controls
              * ------------------------------------------------ */
 
-            GLint conf_a = glGetUniformLocation(program, "confA");
-            GLint conf_b = glGetUniformLocation(program, "confB");
+            GLint coefficients = glGetUniformLocation(program, "coefficients");
 
-            if (conf_a >= 0) {
-                glUniform1f(conf_a, params.confA);
-            }
-
-            if (conf_b >= 0) {
-                glUniform1f(conf_b, params.confB);
+            if (coefficients >= 0) {
+                glUniform1fv(coefficients, COEFFICIENTS_LENGTH,
+                             params.coefficients);
             }
 
             /* ------------------------------------------------
@@ -784,14 +780,18 @@ int main(int argc, char **argv) {
             ImGui::Text("Shader parameters");
             ImGui::Separator();
 
-            ImGui::SliderFloat("confA", &params.confA, 0.0f, 1.0f);
-            ImGui::SliderFloat("confB", &params.confB, 0.0f, 1.0f);
-
-            /*
+            ImGui::Text("Polynomial coefficients");
             ImGui::Separator();
-            ImGui::Text("confA = %.3f", params.confA);
-            ImGui::Text("confB = %.3f", params.confB);
-            */
+
+            for (int i = 0; i < COEFFICIENTS_LENGTH; i++) {
+                char label[32];
+
+                snprintf(label, sizeof(label), "x^%d",
+                         COEFFICIENTS_LENGTH - 1 - i);
+
+                ImGui::SliderFloat(label, &params.coefficients[i], -5.0f, 5.0f,
+                                   "%.3f");
+            }
 
             ImGui::End();
         }
