@@ -14,8 +14,8 @@ float dist(vec2 p1, vec2 p2) {
 }
 
 float brightness(vec2 point) {
-    float d = dist(point, vec2(0.0, 0.0)) - 1.0;
-    return exp(-0.03 * d) + 0.2;
+    float d = dist(vec2(0.0), point);
+    return 0.8 * exp(-0.8 * d) + 0.2;
 }
 
 vec3 cColor(vec2 point) {
