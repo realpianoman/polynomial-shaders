@@ -29,7 +29,7 @@ typedef struct {
     float coefficients[COEFFICIENTS_LENGTH];
 } ShaderParams;
 
-bool show_ui = true;
+bool show_ui = false;
 
 /*
  * Fullscreen triangle vertex shader.
@@ -483,7 +483,8 @@ int main(int argc, char **argv) {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    ShaderParams params = {{0.0f, 0.0f, 0.0f, 0.0f, 1.0f}};
+    ShaderParams params = {
+        {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f}};
 
     /* --------------------------------------------------------
      * VSync

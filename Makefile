@@ -23,7 +23,7 @@ $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) $(SRC) -o $@ $(LDLIBS)
 
 run: $(TARGET)
-	./$(TARGET) shader.frag
+	./$(TARGET) main.frag 1920 960
 
 clean:
 	rm -f $(TARGET)
