@@ -74,6 +74,18 @@ void main()
     vec3 color;
     if(solution) {
         color = cColor(val); // * brightness(val);
+        
+        bool found = false;
+        for(int i=0; i < coefficientsLength; i++) {
+            if(coefficients[i] != 0.0) {
+                found = true;
+                break;
+            }
+        }
+
+        if(!found) {
+            color = cColor(vec2(0.0, 0.0));
+        }
     } else {
         color = vec3(0.0);
     }
